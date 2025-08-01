@@ -59,31 +59,40 @@
         color: #fff;
       }
 
-      .chat-container {
-        margin-top: 2rem;
-        width: 90vw;
-        max-width: 600px;
-        background: rgba(255, 255, 255, 0.05);
-        backdrop-filter: blur(8px);
-        border-radius: 12px;
-        padding: 1rem;
-        font-size: 1rem;
-        box-shadow: 0 0 12px rgba(255, 255, 255, 0.1);
-      }
+.chat-container {
+  margin-top: 2rem;
+  width: 95vw;
+  max-width: 900px;            /* increased */
+  height: 70vh;                /* increased height */
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 2rem;
+  font-size: 0.95rem;          /* slightly smaller */
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
 
-      .chatbox {
-        max-height: 300px;
-        overflow-y: auto;
-        margin-bottom: 0.5rem;
-      }
+.chatbox {
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 1rem;
+  padding-right: 0.5rem;
+  font-size: 0.9rem;           /* smaller font inside chat */
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
 
-      .message {
-        padding: 0.5rem;
-        border-radius: 8px;
-        margin-bottom: 0.5rem;
-        line-height: 1.4;
-        white-space: pre-wrap;
-      }
+.message {
+  padding: 0.6rem 1rem;
+  border-radius: 10px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
 
       .message.bot {
         background: rgba(255, 255, 255, 0.1);
@@ -96,17 +105,19 @@
         text-align: right;
       }
 
-      input#userInput {
-        width: 100%;
-        padding: 0.75rem;
-        border: none;
-        border-radius: 8px;
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 1rem;
-        background: rgba(255, 255, 255, 0.1);
-        color: #fff;
-        outline: none;
-      }
+     
+
+input#userInput {
+  width: 100%;
+  padding: 0.9rem;
+  border: none;
+  border-radius: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.95rem;          /* adjusted */
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  outline: none;
+}
     </style>
 
     <script>document.documentElement.className = "js";</script>
@@ -161,26 +172,33 @@
 
     <!-- Chat Typing and Response -->
     <script type="module">
-      import { TextAnimator } from './js/effect-1/text-animator.js';
-
+      
       const chatbox = document.getElementById('chatbox');
       const input = document.getElementById('userInput');
 
-      function appendMessage(sender, text) {
-        const msg = document.createElement('div');
-        msg.className = 'message ' + sender;
+     function appendMessage(sender, text) {
+  const msg = document.createElement('div');
+  msg.className = 'message ' + sender;
 
-        const span = document.createElement('span');
-        span.classList.add('hover-effect', 'hover-effect--cursor-square');
-        span.textContent = text;
+  const span = document.createElement('span');
+  msg.appendChild(span);
+  chatbox.appendChild(msg);
+  chatbox.scrollTop = chatbox.scrollHeight;
 
-        msg.appendChild(span);
-        chatbox.appendChild(msg);
-        chatbox.scrollTop = chatbox.scrollHeight;
+  let index = 0;
 
-        const animator = new TextAnimator(span);
-        animator.animate();
-      }
+  function typeChar() {
+    if (index < text.length) {
+      span.textContent += text.charAt(index);
+      index++;
+      chatbox.scrollTop = chatbox.scrollHeight;
+      setTimeout(typeChar, 6); // faster typing (was 12ms)
+    }
+  }
+
+  typeChar();
+}
+
 
       async function fetchBotReply(message) {
         try {

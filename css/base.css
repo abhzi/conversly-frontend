@@ -121,3 +121,8 @@ body::before {
 	pointer-events: none;
 	z-index: -1;
 }
+.message span {
+  display: block;
+  white-space: pre-wrap;
+  word-break: break-word;
+}

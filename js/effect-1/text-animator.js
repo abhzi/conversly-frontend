@@ -40,7 +40,7 @@ export class TextAnimator {
         opacity: 0
       },
       {
-        duration: 0.03,
+        duration: 0.3,
         onStart: () => {
           // Set --opa to 1 at the start of the animation
           gsap.set(char, { '--opa': 1 });

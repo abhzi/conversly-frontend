@@ -182,14 +182,36 @@
         animator.animate();
       }
 
+      async function fetchBotReply(message) {
+        try {
+          const response = await fetch("https://conversly-backend.onrender.com/api/chat", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              messages: [
+                { role: "user", content: message }
+              ],
+            }),
+          });
+
+          const data = await response.json();
+
+          const reply = data?.choices?.[0]?.message?.content || "⚠️ No response from AI.";
+          appendMessage("bot", reply);
+        } catch (error) {
+          console.error("Error fetching bot reply:", error);
+          appendMessage("bot", "⚠️ Failed to fetch response.");
+        }
+      }
+
       input.addEventListener('keypress', function (e) {
         if (e.key === 'Enter' && input.value.trim() !== '') {
           const userMessage = input.value.trim();
           input.value = '';
           appendMessage('user', userMessage);
-
-        
-       
+          fetchBotReply(userMessage);
         }
       });
     </script>

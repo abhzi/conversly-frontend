@@ -16,10 +16,10 @@
     <!-- Base CSS -->
     <link rel="stylesheet" type="text/css" href="css/base.css" />
 
-    <!-- GSAP CDN for LineMaker -->
+    <!-- GSAP -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
-    <!-- LineMaker effect -->
+    <!-- LineMaker -->
     <script src="LineMaker.js"></script>
 
     <style>
@@ -36,6 +36,7 @@
         justify-content: center;
         align-items: center;
         min-height: 100vh;
+        overflow-x: hidden;
       }
 
       main {
@@ -43,6 +44,8 @@
         flex-direction: column;
         align-items: center;
         width: 100%;
+        padding: 1rem;
+        box-sizing: border-box;
       }
 
       .list {
@@ -59,40 +62,40 @@
         color: #fff;
       }
 
-.chat-container {
-  margin-top: 2rem;
-  width: 95vw;
-  max-width: 900px;            /* increased */
-  height: 70vh;                /* increased height */
-  background: rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(10px);
-  border-radius: 16px;
-  padding: 2rem;
-  font-size: 0.95rem;          /* slightly smaller */
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
+      .chat-container {
+        margin-top: 2rem;
+        width: 95vw;
+        max-width: 900px;
+        height: 70vh;
+        background: rgba(255, 255, 255, 0.06);
+        backdrop-filter: blur(10px);
+        border-radius: 16px;
+        padding: 2rem;
+        font-size: 0.95rem;
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
 
-.chatbox {
-  flex: 1;
-  overflow-y: auto;
-  margin-bottom: 1rem;
-  padding-right: 0.5rem;
-  font-size: 0.9rem;           /* smaller font inside chat */
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
+      .chatbox {
+        flex: 1;
+        overflow-y: auto;
+        padding-right: 0.5rem;
+        font-size: 0.9rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+      }
 
-.message {
-  padding: 0.6rem 1rem;
-  border-radius: 10px;
-  line-height: 1.5;
-  white-space: pre-wrap;
-  word-break: break-word;
-}
+      .message {
+        padding: 0.6rem 1rem;
+        border-radius: 10px;
+        line-height: 1.5;
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
 
       .message.bot {
         background: rgba(255, 255, 255, 0.1);
@@ -105,19 +108,46 @@
         text-align: right;
       }
 
-     
+      input#userInput {
+        width: 100%;
+        padding: 0.9rem;
+        border: none;
+        border-radius: 10px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.95rem;
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+        outline: none;
+      }
 
-input#userInput {
-  width: 100%;
-  padding: 0.9rem;
-  border: none;
-  border-radius: 10px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.95rem;          /* adjusted */
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
-  outline: none;
-}
+      /* 🔍 Mobile responsiveness */
+      @media screen and (max-width: 768px) {
+        .list__item-col {
+          font-size: 3.5rem;
+        }
+
+        .chat-container {
+          width: 100%;
+          height: 75vh;
+          padding: 1rem;
+          border-radius: 12px;
+        }
+
+        .chatbox {
+          font-size: 0.85rem;
+          gap: 0.5rem;
+        }
+
+        input#userInput {
+          font-size: 0.9rem;
+          padding: 0.8rem;
+        }
+
+        .message {
+          padding: 0.5rem 0.75rem;
+          line-height: 1.4;
+        }
+      }
     </style>
 
     <script>document.documentElement.className = "js";</script>
@@ -126,26 +156,19 @@ input#userInput {
   <body>
     <main>
       <section class="content">
-        <!-- Animated Conversly Heading -->
+        <!-- Heading -->
         <ul class="list list--box">
           <li class="list__item">
-            <span
-              class="list__item-col hover-effect hover-effect--cursor-square"
-              id="heading"
-              >CONVERSLY</span
-            >
+            <span class="list__item-col hover-effect hover-effect--cursor-square" id="heading">
+              CONVERSLY
+            </span>
           </li>
         </ul>
 
-        <!-- Chat Box -->
+        <!-- Chat UI -->
         <div class="chat-container">
           <div class="chatbox" id="chatbox"></div>
-          <input
-            type="text"
-            id="userInput"
-            placeholder="Type your message..."
-            autocomplete="off"
-          />
+          <input type="text" id="userInput" placeholder="Type your message..." autocomplete="off" />
         </div>
       </section>
     </main>
@@ -155,7 +178,7 @@ input#userInput {
     <script src="js/split-type.min.js"></script>
     <script type="module" src="js/effect-1/index.js"></script>
 
-    <!-- Animate Conversly on Load -->
+    <!-- Heading animation -->
     <script type="module">
       import { gsap } from './js/gsap.min.js';
       window.addEventListener('DOMContentLoaded', () => {
@@ -170,52 +193,43 @@ input#userInput {
       });
     </script>
 
-    <!-- Chat Typing and Response -->
+    <!-- Chat logic -->
     <script type="module">
-      
       const chatbox = document.getElementById('chatbox');
       const input = document.getElementById('userInput');
 
-     function appendMessage(sender, text) {
-  const msg = document.createElement('div');
-  msg.className = 'message ' + sender;
+      function appendMessage(sender, text) {
+        const msg = document.createElement('div');
+        msg.className = 'message ' + sender;
 
-  const span = document.createElement('span');
-  msg.appendChild(span);
-  chatbox.appendChild(msg);
-  chatbox.scrollTop = chatbox.scrollHeight;
+        const span = document.createElement('span');
+        msg.appendChild(span);
+        chatbox.appendChild(msg);
+        chatbox.scrollTop = chatbox.scrollHeight;
 
-  let index = 0;
+        let index = 0;
 
-  function typeChar() {
-    if (index < text.length) {
-      span.textContent += text.charAt(index);
-      index++;
-      chatbox.scrollTop = chatbox.scrollHeight;
-      setTimeout(typeChar, 6); // faster typing (was 12ms)
-    }
-  }
+        function typeChar() {
+          if (index < text.length) {
+            span.textContent += text.charAt(index);
+            index++;
+            chatbox.scrollTop = chatbox.scrollHeight;
+            setTimeout(typeChar, 6); // typing speed
+          }
+        }
 
-  typeChar();
-}
-
+        typeChar();
+      }
 
       async function fetchBotReply(message) {
         try {
           const response = await fetch("https://conversly-backend.onrender.com/api/chat", {
             method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              messages: [
-                { role: "user", content: message }
-              ],
-            }),
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ messages: [{ role: "user", content: message }] }),
           });
 
           const data = await response.json();
-
           const reply = data?.choices?.[0]?.message?.content || "⚠️ No response from AI.";
           appendMessage("bot", reply);
         } catch (error) {
@@ -224,7 +238,7 @@ input#userInput {
         }
       }
 
-      input.addEventListener('keypress', function (e) {
+      input.addEventListener('keypress', (e) => {
         if (e.key === 'Enter' && input.value.trim() !== '') {
           const userMessage = input.value.trim();
           input.value = '';
@@ -234,7 +248,7 @@ input#userInput {
       });
     </script>
 
-    <!-- Activate LineMaker effect -->
+    <!-- Activate LineMaker -->
     <script>
       document.addEventListener('DOMContentLoaded', () => {
         const heading = document.querySelector('#heading');

@@ -1,0 +1,123 @@
+*,
+*::after,
+*::before {
+	box-sizing: border-box;
+}
+
+:root {
+	font-size: 16px;
+	--page-padding: 2rem;
+	--color-text: #fff;
+	--color-bg: #000;
+	--color-list-item: #fff;
+	--color-number: #fff;
+	--color-bg-effect: black;
+	--blendmode-effect: difference;
+	--bg-blur: 0px;
+	--font-size-list-item: 18px;
+}
+
+body {
+	margin: 0;
+	color: var(--color-text);
+	background-color: var(--color-bg);
+	font-family: "JetBrains Mono", monospace;
+	font-weight: 300;
+	font-optical-sizing: auto;
+	text-transform: uppercase;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	min-height: 100vh;
+}
+
+main {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+	justify-content: center;
+	align-items: center;
+}
+
+.content {
+	display: flex;
+	flex-direction: column;
+	padding: 0 var(--page-padding) 2rem;
+	justify-content: center;
+	align-items: center;
+}
+
+.list {
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	list-style: none;
+	display: flex;
+	flex-direction: column;
+	counter-reset: item 0;
+	align-items: center;
+	text-align: center;
+}
+
+.list__item {
+	font-size: var(--font-size-list-item);
+	cursor: pointer;
+	width: auto;
+	color: var(--color-list-item);
+	padding: 0.5rem 0;
+	position: relative;
+}
+
+.list__item::before {
+	content: none !important;
+}
+
+.list__item-col {
+	display: block;
+	padding: 3px 3px 0;
+	line-height: 0.8;
+}
+
+/* Hover effect */
+.hover-effect .word {
+	white-space: nowrap;
+}
+
+.hover-effect .char {
+	position: relative;
+}
+
+.hover-effect {
+	font-kerning: none;
+	position: relative;
+	white-space: nowrap;
+}
+
+.hover-effect--cursor-square .char {
+	--opa: 0;
+}
+
+.hover-effect--cursor-square .char::after {
+	content: '';
+	width: 1ch;
+	top: 0;
+	left: 0;
+	position: absolute;
+	opacity: var(--opa);
+	background: currentColor;
+	height: 100%;
+}
+
+body::before {
+	content: "";
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-image: 
+		linear-gradient(to right, rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+		linear-gradient(to bottom, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+	background-size: 3px 3px;
+	pointer-events: none;
+	z-index: -1;
+}
